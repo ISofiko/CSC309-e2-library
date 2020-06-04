@@ -102,10 +102,15 @@ patronEntries.addEventListener('click', returnBookToLibrary)
 function addNewBookToBookList(e) {
 	e.preventDefault();
 
+	const bookName = document.querySelector('#newBookName').value
+	const bookAuthor = document.querySelector('#newBookAuthor').value
+	const bookGenre = document.querySelector('#newBookGenre').value
 	// Add book book to global array
-
+	const newBook = new Book(bookName, bookAuthor, bookGenre)
+	libraryBooks.push(newBook)
 
 	// Call addBookToLibraryTable properly to add book to the DOM
+	addBookToLibraryTable(newBook)
 	
 }
 
@@ -168,6 +173,24 @@ function getBookInfo(e) {
 // Adds a book to the library table.
 function addBookToLibraryTable(book) {
 	// Add code here
+	const idCell = document.createElement('td')
+	const titleCell = document.createElement('td')
+	const cardNumberCell = document.createElement('td')
+	// book id
+	idCell.appendChild(document.createTextNode(book.bookId))
+	// book title
+	const strong = document.createElement('strong')
+	strong.appendChild(document.createTextNode(book.title))
+	titleCell.appendChild(strong)
+	
+	bookTable.appendChild(idCell)
+	bookTable.appendChild(titleCell)
+	
+	// possibly adding a patron, if exists
+	if (book.patron != null) {
+		cardNumberCell.appendChild(document.createTextNode(book.patron.cardNumber))
+	}
+	bookTable.appendChild(cardNumberCell)
 
 }
 
