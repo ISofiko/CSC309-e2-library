@@ -18,7 +18,7 @@ class Book {
 		this.title = title;
 		this.author = author;
 		this.genre = genre;
-		this.patron = null; // will be the patron objet
+		this.patron = null; // will be the patron object
 
 		// set book ID
 		this.bookId = numberOfBooks;
@@ -114,18 +114,21 @@ function addNewBookToBookList(e) {
 	
 }
 
-// Changes book patron information, and calls 
+// Changes book patron information, and calls addBookToPatronLoans
 function loanBookToPatron(e) {
 	e.preventDefault();
 
 	// Get correct book and patron
-
+	const bookId = document.querySelector('#loanBookId').value
+	const cardNumber = document.querySelector('#loanCardNum').value
+	const patron = patrons[cardNumber]
 
 	// Add patron to the book's patron property
-	
+	const book = libraryBooks[bookId]
+	book.patron = patron
 
 	// Add book to the patron's book table in the DOM by calling addBookToPatronLoans()
-	
+	addBookToPatronLoans(book)
 
 	// Start the book loan timer.
 	
@@ -206,6 +209,37 @@ function displayBookInfo(book) {
 function addBookToPatronLoans(book) {
 	// Add code here
 
+	// where to put the new entry
+	const patrons = document.querySelectorAll('.patron')
+	const position = book.patron.cardNumber
+	const table = patrons[position].querySelector('.patronLoansTable')
+
+	// create book entry
+	const bookEntry = document.createElement('tr')
+	const idCell = document.createElement('td')
+	idCell.appendChild(document.createTextNode(book.bookId))
+	const titleCell = document.createElement('td')
+	const strong = document.createElement('strong')
+	strong.appendChild(document.createTextNode(book.title))
+	titleCell.appendChild(strong)
+	const statusCell = document.createElement('td')
+	const status = document.createElement('span')
+	status.className = 'green'
+	status.appendChild(document.createTextNode('Within due date'))
+	statusCell.appendChild(status)
+	const returnCell = document.createElement('td')
+	const button = document.createElement('button')
+	button.className = 'return'
+	button.appendChild(document.createTextNode('return'))
+	returnCell.appendChild(button)
+	
+	bookEntry.appendChild(idCell)
+	bookEntry.appendChild(titleCell)
+	bookEntry.appendChild(statusCell)
+	bookEntry.appendChild(returnCell)
+
+	// add the entry
+	table.appendChild(bookEntry)
 }
 
 // Adds a new patron with no books in their table to the DOM, including name, card number,
