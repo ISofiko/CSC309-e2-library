@@ -146,10 +146,11 @@ function returnBookToLibrary(e){
 	if (e.target.classList.contains('return')){
 		// Call removeBookFromPatronTable()
 		const bookEntry = e.target.parentElement.parentElement
+		const bookId = parseInt(bookEntry.firstElementChild.innerText)
 		removeBookFromPatronTable(bookEntry)
 
 		// Change the book object to have a patron of 'null'
-		const bookId = bookEntry.firstElementChild
+		libraryBooks[bookId].patron = null
 	}
 
 
@@ -262,9 +263,9 @@ function addBookToPatronLoans(book) {
 	// Add code here
 
 	// where to put the new entry
-	const patrons = document.querySelectorAll('.patron')
+	const patronsDisplayed = document.querySelectorAll('.patron')
 	const position = book.patron.cardNumber
-	const table = patrons[position].querySelector('tbody')
+	const table = patronsDisplayed[position].querySelector('tbody')
 
 	// create book entry
 	const bookEntry = document.createElement('tr')
@@ -354,8 +355,8 @@ function removeBookFromPatronTable(book) {
 	// Add code here
 	const bookId = parseInt(book.firstElementChild.innerText)
 	const cardNumber = parseInt(libraryBooks[bookId].patron.cardNumber)
-	const patrons = patronEntries.querySelectorAll('.patron')
-	const table = patrons[cardNumber].getElementsByTagName('tbody')[0]
+	const patronsDisplayed = patronEntries.querySelectorAll('.patron')
+	const table = patronsDisplayed[cardNumber].getElementsByTagName('tbody')[0]
 	// remove card number from book library table
 	changeBookLoanCard(bookId, '')
 	table.removeChild(book)
@@ -365,6 +366,20 @@ function removeBookFromPatronTable(book) {
 // Set status to red 'Overdue' in the book's patron's book table.
 function changeToOverdue(book) {
 	// Add code here
+	const cardNumber = book.patron.cardNumber
+	const patronsDisplayed = patronEntries.querySelectorAll('.patron')
+	const table = patronsDisplayed[cardNumber].getElementsByTagName('tbody')[0]
+	const rows = table.querySelectorAll('tr')
+	for (var i = 1; i < rows.length; i++) {
+		const row = rows[i].querySelectorAll('td')
+		if (parseInt(row[0].innerText) == book.bookId) {
+			const status = document.createElement('span')
+			status.className = 'red'
+			status.appendChild(document.createTextNode('Overdue'))
+			row[2].replaceChild(status, row[2].firstElementChild)
+		}
+	}
+
 
 }
 
