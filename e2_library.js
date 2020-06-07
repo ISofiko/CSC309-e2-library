@@ -160,9 +160,12 @@ function addNewPatron(e) {
 	e.preventDefault();
 
 	// Add a new patron to global array
-
+	const newPatronName = document.querySelector('#newPatronName').value
+	const patron = new Patron(newPatronName)
+	patrons.push(patron)
 
 	// Call addNewPatronEntry() to add patron to the DOM
+	addNewPatronEntry(patron)
 
 }
 
@@ -259,6 +262,53 @@ function addBookToPatronLoans(book) {
 // and blank book list (with only the <th> headers: BookID, Title, Status).
 function addNewPatronEntry(patron) {
 	// Add code here
+	const newPatronEnty = document.createElement('div')
+	newPatronEnty.className = 'patron'
+
+	const nameSpan = document.createElement('span')
+	nameSpan.appendChild(document.createTextNode((patron.name)))
+	nameSpan.className = 'bold'
+	const name = document.createElement('p')
+	name.appendChild(document.createTextNode('Name: '))
+	name.appendChild(nameSpan)
+	newPatronEnty.appendChild(name)
+
+	const cardSpan = document.createElement('span')
+	cardSpan.appendChild(document.createTextNode(patron.cardNumber))
+	cardSpan.className = 'bold'
+	const cardNumber = document.createElement('p')
+	cardNumber.appendChild(document.createTextNode('Card Number: '))
+	cardNumber.appendChild(cardSpan)
+	newPatronEnty.appendChild(cardNumber)
+
+	const loanTitle = document.createElement('h4')
+	loanTitle.appendChild(document.createTextNode('Books on loan:'))
+	newPatronEnty.appendChild(loanTitle)
+
+	const patronLoansTable = document.createElement('table')
+	patronLoansTable.className = 'patronLoansTable'
+	const tbody = document.createElement('tbody')
+	const tableHeader = document.createElement('tr')
+
+	const bookIdHeader = document.createElement('th')
+	bookIdHeader.appendChild(document.createTextNode('BookID'))
+	tableHeader.appendChild(bookIdHeader)
+	const titleHeader = document.createElement('th')
+	titleHeader.appendChild(document.createTextNode('Title'))
+	tableHeader.appendChild(titleHeader)
+	const cardHeader = document.createElement('th')
+	cardHeader.appendChild(document.createTextNode('Status'))
+	tableHeader.appendChild(cardHeader)
+	const returnHeader = document.createElement('th')
+	returnHeader.appendChild(document.createTextNode('Return'))
+	tableHeader.appendChild(returnHeader)
+
+	tbody.appendChild(tableHeader)
+	patronLoansTable.appendChild(tbody)
+	newPatronEnty.appendChild(patronLoansTable)
+
+
+	patronEntries.appendChild(newPatronEnty)
 
 }
 
