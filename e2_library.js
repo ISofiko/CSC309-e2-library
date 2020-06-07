@@ -119,8 +119,8 @@ function loanBookToPatron(e) {
 	e.preventDefault();
 
 	// Get correct book and patron
-	const bookId = document.querySelector('#loanBookId').value
-	const cardNumber = document.querySelector('#loanCardNum').value
+	const bookId = parseInt(document.querySelector('#loanBookId').value)
+	const cardNumber = parseInt(document.querySelector('#loanCardNum').value)
 	const patron = patrons[cardNumber]
 
 	// Add patron to the book's patron property
@@ -130,7 +130,11 @@ function loanBookToPatron(e) {
 	// Add book to the patron's book table in the DOM by calling addBookToPatronLoans()
 	addBookToPatronLoans(book)
 
+	// add card number to book library table
+	changeBookLoanCard(bookId, cardNumber)
+
 	// Start the book loan timer.
+	book.setLoanTime()
 	
 
 }
@@ -139,11 +143,14 @@ function loanBookToPatron(e) {
 function returnBookToLibrary(e){
 	e.preventDefault();
 	// check if return button was clicked, otherwise do nothing.
+	if (e.target.classList.contains('return')){
+		// Call removeBookFromPatronTable()
+		const bookEntry = e.target.parentElement.parentElement
+		removeBookFromPatronTable(bookEntry)
 
-	// Call removeBookFromPatronTable()
-
-
-	// Change the book object to have a patron of 'null'
+		// Change the book object to have a patron of 'null'
+		const bookId = bookEntry.firstElementChild
+	}
 
 
 }
@@ -185,15 +192,21 @@ function addBookToLibraryTable(book) {
 	const strong = document.createElement('strong')
 	strong.appendChild(document.createTextNode(book.title))
 	titleCell.appendChild(strong)
+
+	// where to add the entry
+	const table = bookTable.getElementsByTagName('tbody')[0]
+	const newRow = table.insertRow()
 	
-	bookTable.appendChild(idCell)
-	bookTable.appendChild(titleCell)
+	newRow.appendChild(idCell)
+	newRow.appendChild(titleCell)
 	
 	// possibly adding a patron, if exists
 	if (book.patron != null) {
 		cardNumberCell.appendChild(document.createTextNode(book.patron.cardNumber))
+	} else {
+		cardNumberCell.appendChild(document.createTextNode(''))
 	}
-	bookTable.appendChild(cardNumberCell)
+	newRow.appendChild(cardNumberCell)
 
 }
 
@@ -212,7 +225,7 @@ function addBookToPatronLoans(book) {
 	// where to put the new entry
 	const patrons = document.querySelectorAll('.patron')
 	const position = book.patron.cardNumber
-	const table = patrons[position].querySelector('.patronLoansTable')
+	const table = patrons[position].querySelector('tbody')
 
 	// create book entry
 	const bookEntry = document.createElement('tr')
@@ -253,6 +266,13 @@ function addNewPatronEntry(patron) {
 // Removes book from patron's book table and remove patron card number from library book table
 function removeBookFromPatronTable(book) {
 	// Add code here
+	const bookId = parseInt(book.firstElementChild.innerText)
+	const cardNumber = parseInt(libraryBooks[bookId].patron.cardNumber)
+	const patrons = patronEntries.querySelectorAll('.patron')
+	const table = patrons[cardNumber].getElementsByTagName('tbody')[0]
+	// remove card number from book library table
+	changeBookLoanCard(bookId, '')
+	table.removeChild(book)
 
 }
 
@@ -260,5 +280,13 @@ function removeBookFromPatronTable(book) {
 function changeToOverdue(book) {
 	// Add code here
 
+}
+
+function changeBookLoanCard(bookId, cardNumber) {
+	const table = bookTable.getElementsByTagName('tbody')[0]
+	const row = table.querySelectorAll('tr')[bookId+1]
+	const cell = row.querySelectorAll('td')[2]
+	// replace current card number with new card number
+	cell.replaceChild(document.createTextNode(cardNumber), cell.childNodes[0])
 }
 
