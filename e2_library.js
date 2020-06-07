@@ -174,8 +174,11 @@ function getBookInfo(e) {
 	e.preventDefault();
 
 	// Get correct book
+	const bookId = parseInt(document.querySelector('#bookInfoId').value)
+	const book = libraryBooks[bookId]
 
-	// Call displayBookInfo()	
+	// Call displayBookInfo()
+	displayBookInfo(book)
 
 }
 
@@ -217,6 +220,39 @@ function addBookToLibraryTable(book) {
 // Displays deatiled info on the book in the Book Info Section
 function displayBookInfo(book) {
 	// Add code here
+	const childNodes = bookInfo.getElementsByTagName('p')
+
+	bookIdValue = childNodes[0]
+	bookTitleValue = childNodes[1]
+	authorValue = childNodes[2]
+	genreValue = childNodes[3]
+	loanerValue = childNodes[4]
+	
+	// bookId
+	const newBookId = document.createElement('span')
+	newBookId.appendChild(document.createTextNode(book.bookId))
+	bookIdValue.replaceChild(newBookId, bookIdValue.childNodes[1])
+
+	const newTitle = document.createElement('span')
+	newTitle.appendChild(document.createTextNode(book.title))
+	bookTitleValue.replaceChild(newTitle, bookTitleValue.childNodes[1])
+
+	const newAuthor = document.createElement('span')
+	newAuthor.appendChild(document.createTextNode(book.author))
+	authorValue.replaceChild(newAuthor, authorValue.childNodes[1])
+
+	const newGenre = document.createElement('span')
+	newGenre.appendChild(document.createTextNode(book.genre))
+	genreValue.replaceChild(newGenre, genreValue.childNodes[1])
+
+	const newLoaner = document.createElement('span')
+	if (!book.patron) {
+		// if there is no loaner, the loaner value is N/A
+		newLoaner.appendChild(document.createTextNode('N/A'))
+	} else {
+		newLoaner.appendChild(document.createTextNode(book.patron.name))
+	}
+	loanerValue.replaceChild(newLoaner, loanerValue.childNodes[1])
 
 }
 
